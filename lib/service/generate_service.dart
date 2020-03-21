@@ -8,8 +8,12 @@ import 'package:qr/qr.dart';
 import 'package:tuple/tuple.dart';
 import 'package:image/image.dart' as Image2;
 
+/// This class Generates the QRCode PDFs
+/// author: Tandashi
 class GenerateService {
 
+  /// Generate the PDF ath the given [path] with given [amount]
+  /// Will return null if sucessful else will return a error message
   static Future<String> generate(final String path, final int amount) async {
     final List<Tuple2<QrCode, QrCode>> qrCodes = await _generateQRCodes(amount);
     _generatePDF(path, qrCodes);
@@ -17,6 +21,8 @@ class GenerateService {
     return null;
   }
 
+  /// Generates a PDF at given [path] with given [qrCodes]
+  /// It will strucutre the QRCode pairs as definined in [_addPage]
   static Future<void>_generatePDF(final String path, List<Tuple2<QrCode, QrCode>> qrCodes) async {
     final pdf = Document();
     
@@ -49,6 +55,8 @@ class GenerateService {
     );
   }
 
+  /// Adds a QRCode Pair to a PDF page
+  /// This will add the read QRCode on the left and the write QRCode on the right
   static void _addPage(final Document pdf, final Tuple2<QrCode, QrCode> pair) {
     final qrCodeImageRead = _convertQRCodeToImage(pair.item1);
     final qrCodeImageWrite = _convertQRCodeToImage(pair.item2);
@@ -83,6 +91,8 @@ class GenerateService {
     ));
   }
 
+  /// This Method generates a given [amount] of QRCodes and returns them as a List of QRCode Pairs
+  /// The first entry in the Pair is the read QRCode and the seconds entry is the write QRCode
   static Future<List<Tuple2<QrCode, QrCode>>> _generateQRCodes(final int amount) async {
     final List<Tuple2<QrCode, QrCode>> qrCodes = [];
     final List<CoronaTestCase> testCases = await APIService.createTestCases(amount);
