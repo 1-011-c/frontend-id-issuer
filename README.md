@@ -1,7 +1,6 @@
 # Frontend ID Issuer
 This project is for generating the QRCode Pair PDF.
 
-
 # Dependencies
 To use this project you need the following:
 - [Dart SDK](https://dart.dev/get-dart)
@@ -23,3 +22,14 @@ You can also provide some options to the generate command.
 They include:
 - `-a` or `--amount`: Specify the amount of QRCode Pairs that should be generated. Default: 10
 - `-o` or `--output`: Specify the location where the PDF should be stored. Default: Current working directory.
+
+# Examples
+- Generate 20 QRCode Pairs in the current working directory
+```
+dart main.dart generate -a 20
+```
+
+- Generate 4 QRCode Pairs in `~/`
+```
+dart main.dart generate -a 4 -o ~/
+```
