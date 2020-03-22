@@ -1,3 +1,5 @@
+![logo](logo.png)
+
 # Frontend ID Issuer
 This project is for generating the QRCode Pair PDF.
 
