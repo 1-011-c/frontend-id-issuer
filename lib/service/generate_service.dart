@@ -93,9 +93,22 @@ class GenerateService {
 
   /// This Method generates a given [amount] of QRCodes and returns them as a List of QRCode Pairs
   /// The first entry in the Pair is the read QRCode and the seconds entry is the write QRCode
-  static Future<List<Tuple2<QrCode, QrCode>>> _generateQRCodes(final int amount) async {
+  static Future<List<Tuple2<QrCode, QrCode>>> _generateQRCodes(int amount) async {
     final List<Tuple2<QrCode, QrCode>> qrCodes = [];
-    final List<CoronaTestCase> testCases = await APIService.createTestCases(amount);
+    final List<Future<List<CoronaTestCase>>> futures = [];
+
+    while (amount > 0) {
+      final int chunk = amount > 50 ? 50 : amount;
+      futures.add(APIService.createTestCases(chunk));
+      amount -= chunk;
+    }
+    
+    final List<List<CoronaTestCase>> chunkedTestCases = await Future.wait(futures);
+
+    final List<CoronaTestCase> testCases = chunkedTestCases.fold(<CoronaTestCase>[], (List<CoronaTestCase> acc, List<CoronaTestCase> chunk) {
+      acc.addAll(chunk);
+      return acc;
+    });
 
     testCases.forEach((testCase){
       final QrCode read = new QrCode(4, QrErrorCorrectLevel.M)
